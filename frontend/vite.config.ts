@@ -17,4 +17,14 @@ export default defineConfig({
   nitro: {
     preset: "node-server",
   },
+  vite: {
+    preview: {
+      // Railway (and similar PaaS) put the app behind a rotating/proxied
+      // hostname, so we can't hard-code it. Trust the proxy's Host header.
+      allowedHosts: true,
+    },
+    server: {
+      allowedHosts: true,
+    },
+  },
 });
