@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Features\Submissions\NewFolder1\**" />
+    <Compile Remove="Features\Submissions\Queris\**" />
+    <EmbeddedResource Remove="Features\Submissions\NewFolder1\**" />
+    <EmbeddedResource Remove="Features\Submissions\Queris\**" />
+    <None Remove="Features\Submissions\NewFolder1\**" />
+    <None Remove="Features\Submissions\Queris\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="MediatR" Version="14.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SkillSwap.Domain\SkillSwap.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

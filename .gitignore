@@ -1,0 +1,66 @@
+### Node / npm / Vite ###
+node_modules/
+dist/
+dist-ssr/
+.vite/
+.output/
+.nitro/
+.cache/
+*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# TanStack Router generated file
+routeTree.gen.ts
+
+### .NET ###
+# Build results
+[Bb]in/
+[Oo]bj/
+out/
+
+# Rider / VS user files
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Build logs
+*.binlog
+*.buildlog
+
+# EF Core migrations bundle (keep migrations themselves, ignore local db)
+*.db
+*.db-shm
+*.db-wal
+
+### Claude Code ###
+.claude/settings.local.json
