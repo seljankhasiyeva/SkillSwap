@@ -49,7 +49,7 @@ const LEARNER_NAV: NavItem[] = [
 const MENTOR_NAV: NavItem[] = [
   { title: "Dashboard", url: "/mentor", icon: LayoutDashboard },
   { title: "My Challenges", url: "/mentor/challenges", icon: Swords },
-  { title: "Create with AI", url: "/mentor/challenges/new", icon: Sparkles },
+  { title: "Create with AI", url: "/mentor/challenges/new?ai=true", icon: Sparkles },
   { title: "Submissions", url: "/mentor/submissions", icon: FileCheck2 },
   { title: "Analytics", url: "/mentor/analytics", icon: BarChart3 },
 ];
@@ -113,7 +113,11 @@ function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
-                    <Link to={item.url} className="flex items-center gap-2">
+                    <Link
+                      to={item.url.split("?")[0] as any}
+                      search={item.url.includes("?ai=true") ? { ai: true } : undefined}
+                      className="flex items-center gap-2"
+                    >
                       <item.icon className="size-4" />
                       <span>{item.title}</span>
                     </Link>

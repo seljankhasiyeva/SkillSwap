@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/auth-store";
 import { fetchMe, fetchMySubmissions } from "@/lib/api";
 import { GitBranch, Share2 } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/learner/profile")({
   head: () => ({
@@ -59,7 +60,15 @@ function Profile() {
           <div className="text-right">
             <div className="text-3xl font-bold tabular-nums">{user?.xpPoints ?? 0}</div>
             <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">XP Points</div>
-            <Button size="sm" variant="outline" className="mt-3">
+            <Button
+              size="sm"
+              variant="outline"
+              className="mt-3"
+              onClick={() => {
+                navigator.clipboard.writeText(window.location.href);
+                toast.success("Profile link copied to clipboard!");
+              }}
+            >
               <Share2 className="size-3.5" /> Share profile
             </Button>
           </div>

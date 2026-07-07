@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { toast } from "sonner";
 import { AppLayout } from "@/components/app-layout";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,11 @@ function ChallengeDetail() {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [existingSubmission, setExistingSubmission] = useState<any>(null);
+  const submitRef = useRef<HTMLDivElement>(null);
+
+  const scrollToSubmit = () => {
+    submitRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
     fetchChallengeById(id)
@@ -127,7 +132,71 @@ function ChallengeDetail() {
 
         <div className="grid lg:grid-cols-3 gap-8 mt-8">
           <div className="lg:col-span-2 space-y-8">
-            <section id="submit-section" className="border rounded-lg p-6 bg-surface space-y-4">
+            {/* Description & Overview */}
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold tracking-tight">Overview</h2>
+              <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                {challenge.description || challenge.summary}
+              </div>
+            </div>
+
+            {/* Technologies Used */}
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold tracking-tight">Technologies & Skills</h2>
+              <div className="flex flex-wrap gap-2">
+                {(challenge.technologies?.split("\n") || []).map((t: string) => (
+                  <Badge key={t} variant="secondary" className="font-mono text-xs">
+                    {t.trim()}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+
+            {/* Requirements */}
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold tracking-tight">Requirements</h2>
+              <ul className="list-dash pl-4 space-y-1 text-sm text-muted-foreground leading-relaxed">
+                {(challenge.requirements?.split("\n") || ["Deliver high quality code."]).map((r: string) => (
+                  <li key={r}>{r}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Deliverables */}
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold tracking-tight">Deliverables</h2>
+              <ul className="list-dash pl-4 space-y-1 text-sm text-muted-foreground leading-relaxed">
+                {(challenge.deliverables?.split("\n") || ["GitHub Repository URL", "Design Document / Readme"]).map((d: string) => (
+                  <li key={d}>{d}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Outcomes */}
+            {challenge.outcomes && (
+              <div className="space-y-3">
+                <h2 className="text-lg font-semibold tracking-tight">What You'll Learn & Achieve</h2>
+                <ul className="list-dash pl-4 space-y-1 text-sm text-muted-foreground leading-relaxed">
+                  {(challenge.outcomes.split("\n")).map((o: string) => (
+                    <li key={o}>{o}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Evaluation Criteria */}
+            {challenge.evaluation && (
+              <div className="space-y-3">
+                <h2 className="text-lg font-semibold tracking-tight">Evaluation Criteria</h2>
+                <ul className="list-dash pl-4 space-y-1 text-sm text-muted-foreground leading-relaxed">
+                  {(challenge.evaluation.split("\n")).map((e: string) => (
+                    <li key={e}>{e}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            <section id="submit-section" ref={submitRef} className="border rounded-lg p-6 bg-surface space-y-4">
               <div className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
                 Submit Solution
               </div>
@@ -201,10 +270,8 @@ function ChallengeDetail() {
                 </div>
               </div>
 
-              <Button asChild className="w-full cursor-pointer" size="lg">
-                <a href="#submit-section">
-                  {challenge.price === 0 ? "Start challenge" : "Unlock & start"}
-                </a>
+              <Button onClick={scrollToSubmit} className="w-full cursor-pointer animate-pulse-subtle" size="lg">
+                {challenge.price === 0 ? "Start challenge" : "Unlock & start"}
               </Button>
 
               <div className="grid grid-cols-2 gap-3 pt-2 border-t">
