@@ -7,6 +7,7 @@ import { fetchChallenges } from "@/lib/api";
 import { ArrowUpRight, CheckCircle2, GitBranch, Sparkles, Building2 } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Logo, LogoMark } from "@/components/logo";
+import { useSession } from "@/lib/auth-store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,6 +21,7 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   const [featured, setFeatured] = useState<any[]>([]);
+  const session = useSession();
 
   useEffect(() => {
     fetchChallenges().then((all) => setFeatured(all.slice(0, 3))).catch(console.error);
@@ -37,8 +39,16 @@ function Landing() {
           </nav>
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <Button asChild variant="ghost" size="sm"><Link to="/login">Sign in</Link></Button>
-            <Button asChild size="sm"><Link to="/signup">Get started</Link></Button>
+            {session ? (
+              <Button asChild size="sm">
+                <Link to={`/${session.role}`}>Go to Dashboard</Link>
+              </Button>
+            ) : (
+              <>
+                <Button asChild variant="ghost" size="sm"><Link to="/login">Sign in</Link></Button>
+                <Button asChild size="sm"><Link to="/signup">Get started</Link></Button>
+              </>
+            )}
           </div>
         </div>
       </header>

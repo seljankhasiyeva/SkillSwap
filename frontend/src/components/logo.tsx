@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
+import { useSession } from "@/lib/auth-store";
 
 type LogoProps = {
   size?: "sm" | "md" | "lg";
@@ -14,7 +15,11 @@ const sizeMap = {
   lg: "size-9",
 };
 
-export function Logo({ size = "md", showText = true, className, to = "/" }: LogoProps) {
+export function Logo({ size = "md", showText = true, className, to }: LogoProps) {
+  const session = useSession();
+  const defaultTo = session ? `/${session.role}` : "/";
+  const targetTo = to ?? defaultTo;
+
   const content = (
     <>
       <img
@@ -31,7 +36,7 @@ export function Logo({ size = "md", showText = true, className, to = "/" }: Logo
   );
 
   return (
-    <Link to={to} className="flex items-center gap-2 px-2 py-2">
+    <Link to={targetTo} className="flex items-center gap-2 px-2 py-2">
       {content}
     </Link>
   );
