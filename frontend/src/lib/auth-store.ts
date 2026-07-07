@@ -62,8 +62,17 @@ export async function register(data: {
   });
 
   if (!response.ok) {
-    const error = await response.text();
-    throw new Error(error || "Registration failed.");
+    let errorMessage = "Registration failed.";
+    try {
+      const errorJson = await response.json();
+      errorMessage = errorJson.message || errorJson.title || errorMessage;
+    } catch {
+      try {
+        const text = await response.text();
+        if (text) errorMessage = text;
+      } catch {}
+    }
+    throw new Error(errorMessage);
   }
 
   const result = await response.json();
@@ -85,7 +94,17 @@ export async function login(email: string, password: string): Promise<Session> {
   });
 
   if (!response.ok) {
-    throw new Error("Invalid email or password.");
+    let errorMessage = "Invalid email or password.";
+    try {
+      const errorJson = await response.json();
+      errorMessage = errorJson.message || errorJson.title || errorMessage;
+    } catch {
+      try {
+        const text = await response.text();
+        if (text) errorMessage = text;
+      } catch {}
+    }
+    throw new Error(errorMessage);
   }
 
   const result = await response.json();

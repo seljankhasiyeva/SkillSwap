@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SkillSwap.Application.Features.Auth.Commands;
 using SkillSwap.Application.Features.Auth.DTOs;
@@ -19,21 +19,35 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register(RegisterDto dto)
     {
-        var command = new RegisterCommand(
-            dto.FullName, dto.Email, dto.Password, dto.Role,
-            dto.CompanyName, dto.Bio, dto.Skills, dto.GithubUrl,
-            dto.Organization, dto.Expertise, dto.CompanySize,
-            dto.Industry, dto.HiringRoles);
+        try
+        {
+            var command = new RegisterCommand(
+                dto.FullName, dto.Email, dto.Password, dto.Role,
+                dto.CompanyName, dto.Bio, dto.Skills, dto.GithubUrl,
+                dto.Organization, dto.Expertise, dto.CompanySize,
+                dto.Industry, dto.HiringRoles);
 
-        var result = await _mediator.Send(command);
-        return Ok(result);
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponseDto>> Login(LoginDto dto)
     {
-        var command = new LoginCommand(dto.Email, dto.Password);
-        var result = await _mediator.Send(command);
-        return Ok(result);
+        try
+        {
+            var command = new LoginCommand(dto.Email, dto.Password);
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

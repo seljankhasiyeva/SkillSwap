@@ -60,6 +60,25 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Apply database migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<AppDbContext>();
+        if (context.Database.IsRelational())
+        {
+            context.Database.Migrate();
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while migrating the database.");
+    }
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
