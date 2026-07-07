@@ -86,3 +86,20 @@ export async function fetchMe() {
   if (!res.ok) throw new Error("Failed to fetch user.");
   return res.json();
 }
+
+export async function updateProfile(data: {
+  fullName?: string;
+  bio?: string;
+  skills?: string;
+  githubUrl?: string;
+  experienceLevel?: string;
+  careerGoal?: string;
+}) {
+  const res = await fetch(`${API_BASE}/Users/me`, {
+    method: "PUT",
+    headers: authHeaders(),
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to update profile.");
+  return res.json();
+}
