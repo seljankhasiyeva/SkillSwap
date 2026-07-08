@@ -43,7 +43,11 @@ function CompanyChallenges() {
                 <div className="text-sm text-muted-foreground mt-1">{c.summary}</div>
                 <div className="flex items-center justify-between mt-4 pt-3 border-t text-xs text-muted-foreground">
                   <span>{c.completedCount} submissions</span>
-                  <Button size="sm" variant="outline">Review submissions</Button>
+                  <Button size="sm" variant="outline" asChild>
+                    <Link to="/company/pipeline" search={{ challengeId: c.id } as any}>
+                      Review submissions
+                    </Link>
+                  </Button>
                 </div>
               </div>
             ))

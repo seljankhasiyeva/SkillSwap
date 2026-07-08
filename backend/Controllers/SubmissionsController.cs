@@ -1,4 +1,4 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SkillSwap.Application.Features.Submissions.Commands;
@@ -54,7 +54,7 @@ public class SubmissionsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Mentor")]
+    [Authorize(Roles = "Mentor,Company")]
     public async Task<ActionResult<List<SubmissionDto>>> GetAll()
     {
         var result = await _mediator.Send(new GetAllSubmissionsQuery());
@@ -62,7 +62,7 @@ public class SubmissionsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "Mentor")]
+    [Authorize(Roles = "Mentor,Company")]
     public async Task<ActionResult<SubmissionDto>> GetById(Guid id)
     {
         var result = await _mediator.Send(new GetSubmissionByIdQuery(id));
