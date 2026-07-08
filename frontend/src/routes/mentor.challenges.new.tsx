@@ -11,14 +11,7 @@ import { useSession } from "@/lib/auth-store";
 import { CATEGORIES, DIFFICULTIES, type Category, type Difficulty } from "@/lib/mock-data";
 import { ArrowLeft, Save, Sparkles } from "lucide-react";
 
-import { z } from "zod";
-
-const searchSchema = z.object({
-  ai: z.any().optional(),
-});
-
 export const Route = createFileRoute("/mentor/challenges/new")({
-  validateSearch: (search) => searchSchema.parse(search),
   head: () => ({
     meta: [
       { title: "New Challenge — SkillSwap" },
@@ -31,7 +24,6 @@ export const Route = createFileRoute("/mentor/challenges/new")({
 function NewChallenge() {
   const navigate = useNavigate();
   const session = useSession();
-  const { ai } = Route.useSearch() as any;
 
   // Form states
   const [title, setTitle] = useState("");
@@ -43,91 +35,9 @@ function NewChallenge() {
   const [estimatedHours, setEstimatedHours] = useState(8);
   const [price, setPrice] = useState(0);
 
-  // AI Prompt states
-  const [aiPrompt, setAiPrompt] = useState("");
-  const [isGenerating, setIsGenerating] = useState(false);
-
   // Errors state
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Auto-fill using AI simulation
-  const handleAiDraft = (silent = false) => {
-    setTitle("Two-Phase Commit Across Postgres Shards");
-    setCategory("Software Engineering");
-    setDifficulty("Advanced");
-    setDescription("Ship a Go service coordinating 2PC across two Postgres instances. Demonstrate correct behavior under coordinator crash mid-prepare and document recovery semantics.");
-    setRequirements("Use Go 1.21+ with no third-party broker libraries\nPersist to local disk with WAL semantics\nExpose a gRPC API for publish/subscribe\nProvide benchmark script demonstrating throughput");
-    setTags("Go, Postgres, gRPC, Distributed Systems");
-    setEstimatedHours(12);
-    setPrice(8);
-    if (!silent) {
-      toast.success("AI Draft generated! Review the fields below.");
-    }
-  };
-
-  // Generate customized draft using AI simulator
-  const generateWithAi = async () => {
-    if (!aiPrompt.trim()) {
-      toast.error("Please describe what challenge you want to generate.");
-      return;
-    }
-    setIsGenerating(true);
-    setTimeout(() => {
-      const promptLower = aiPrompt.toLowerCase();
-      if (promptLower.includes("rust") || promptLower.includes("wasm") || promptLower.includes("webassembly")) {
-        setTitle("High-Performance WebAssembly Image Processor in Rust");
-        setCategory("Software Engineering");
-        setDifficulty("Advanced");
-        setDescription("Build a Rust library compiled to WebAssembly that performs real-time edge detection and color grading on 4K images. Expose it via a clean JS API.");
-        setRequirements("Compile to wasm32-unknown-unknown target\nDemonstrate zero-copy buffer sharing between JS and Wasm\nProvide benchmark comparing Wasm vs native JS processing\nPass all Rust unit tests");
-        setTags("Rust, WebAssembly, JavaScript, Image Processing");
-        setEstimatedHours(10);
-        setPrice(5);
-      } else if (promptLower.includes("python") || promptLower.includes("ml") || promptLower.includes("ai")) {
-        setTitle("Deploy an LLM Quantization Pipeline in Python");
-        setCategory("AI / Machine Learning");
-        setDifficulty("Advanced");
-        setDescription("Build a Python pipeline using HuggingFace and llama.cpp to quantize a 7B model to 4-bit GGUF format and expose it via a FastAPI server.");
-        setRequirements("FastAPI server with streaming response\nBenchmark throughput (tokens/sec) before and after quantization\nInclude Dockerfile supporting GPU acceleration\nWrite tests for endpoint correctness");
-        setTags("Python, LLM, FastAPI, Machine Learning, Docker");
-        setEstimatedHours(8);
-        setPrice(0);
-      } else if (promptLower.includes("react") || promptLower.includes("next") || promptLower.includes("frontend")) {
-        setTitle("Build a Real-Time Collaborative Canvas in React");
-        setCategory("Frontend Development");
-        setDifficulty("Advanced");
-        setDescription("Build a collaborative whiteboard canvas utilizing HTML5 Canvas, WebSockets, and Yjs CRDTs to support conflict-free offline edits and syncing.");
-        setRequirements("Utilize HTML5 Canvas for drawing interface\nIntegrate WebSockets / Yjs for real-time syncing\nSupport local storage caching for offline state\nWrite Jest tests for CRDT model consistency");
-        setTags("React, TypeScript, HTML5 Canvas, WebSockets, CRDTs");
-        setEstimatedHours(14);
-        setPrice(10);
-      } else {
-        setTitle(`Production-Grade System: ${aiPrompt.slice(0, 30)}`);
-        setCategory("Software Engineering");
-        setDifficulty("Intermediate");
-        setDescription(`Build a production-grade, highly-available implementation of: "${aiPrompt}". Ensure correct error handling, test coverage, and documentation.`);
-        setRequirements("Expose clean endpoints via REST API\nAchieve 80%+ unit test coverage\nProvide a multi-stage Dockerfile\nDocument architecture and performance characteristics");
-        setTags("Go, Postgres, Docker, REST API");
-        setEstimatedHours(8);
-        setPrice(0);
-      }
-      setIsGenerating(false);
-      toast.success("AI challenge template successfully generated!");
-    }, 1500);
-  };
-
-  useEffect(() => {
-    if (ai === true || ai === "true") {
-      setIsGenerating(true);
-      const timer = setTimeout(() => {
-        handleAiDraft(true);
-        setIsGenerating(false);
-        toast.info("AI has auto-generated a 'Two-Phase Commit' challenge draft. Review or generate a new one!");
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [ai]);
 
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -206,27 +116,6 @@ function NewChallenge() {
           </div>
         </div>
 
-        {/* AI Generation Box */}
-        <div className="border border-primary/20 rounded-lg p-5 bg-primary/5 space-y-3">
-          <div className="flex items-center gap-2 text-primary font-semibold text-sm">
-            <Sparkles className="size-4 animate-pulse" />
-            <span>Generate Challenge using AI</span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Describe the challenge brief you want to create, and the AI will draft the title, description, requirements, and tags for you.
-          </p>
-          <div className="flex gap-2">
-            <Input
-              placeholder="e.g. A Rust WebAssembly image filter, or a Python LLM quantization pipeline..."
-              value={aiPrompt}
-              onChange={(e) => setAiPrompt(e.target.value)}
-              disabled={isGenerating}
-            />
-            <Button type="button" onClick={generateWithAi} disabled={isGenerating}>
-              {isGenerating ? "Generating..." : "Generate with AI"}
-            </Button>
-          </div>
-        </div>
 
         <div className="grid md:grid-cols-3 gap-6">
           {/* Main Form */}
@@ -364,22 +253,8 @@ function NewChallenge() {
                 Cancel
               </Button>
             </div>
-          </form>
-
-          {/* AI Helper Sidebar */}
+          </form>          {/* Helper Sidebar */}
           <div className="space-y-4">
-            <div className="border rounded-lg p-5 bg-surface space-y-4">
-              <div className="flex items-center gap-2 text-primary">
-                <Sparkles className="size-4 animate-pulse" />
-                <h3 className="font-semibold text-sm">Need Inspiration?</h3>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Click below to generate an AI-drafted template for a "Two-Phase Commit Across Postgres" challenge. You can then edit it before publishing.
-              </p>
-              <Button type="button" variant="outline" className="w-full text-xs" onClick={handleAiDraft}>
-                Load AI Template Draft
-              </Button>
-            </div>
 
             <div className="border rounded-lg p-5 bg-surface text-xs space-y-2 text-muted-foreground">
               <div className="font-semibold text-foreground">Tips for Mentors</div>

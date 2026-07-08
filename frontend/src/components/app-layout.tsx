@@ -49,7 +49,6 @@ const LEARNER_NAV: NavItem[] = [
 const MENTOR_NAV: NavItem[] = [
   { title: "Dashboard", url: "/mentor", icon: LayoutDashboard },
   { title: "My Challenges", url: "/mentor/challenges", icon: Swords },
-  { title: "Create with AI", url: "/mentor/challenges/new?ai=true", icon: Sparkles },
   { title: "Submissions", url: "/mentor/submissions", icon: FileCheck2 },
   { title: "Analytics", url: "/mentor/analytics", icon: BarChart3 },
 ];
