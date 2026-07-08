@@ -113,17 +113,14 @@ function AppSidebar() {
               {items.map((item) => (
                 <SidebarMenuItem key={item.url}>
                   <SidebarMenuButton asChild isActive={isActive(item.url)} tooltip={item.title}>
-                    {item.url.includes("?") ? (
-                      <a href={item.url} className="flex items-center gap-2">
-                        <item.icon className="size-4" />
-                        <span>{item.title}</span>
-                      </a>
-                    ) : (
-                      <Link to={item.url as any} className="flex items-center gap-2">
-                        <item.icon className="size-4" />
-                        <span>{item.title}</span>
-                      </Link>
-                    )}
+                    <Link
+                      to={item.url.split("?")[0] as any}
+                      search={item.url.includes("?ai=true") ? { ai: true } : undefined}
+                      className="flex items-center gap-2"
+                    >
+                      <item.icon className="size-4" />
+                      <span>{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

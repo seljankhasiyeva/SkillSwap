@@ -11,7 +11,14 @@ import { useSession } from "@/lib/auth-store";
 import { CATEGORIES, DIFFICULTIES, type Category, type Difficulty } from "@/lib/mock-data";
 import { ArrowLeft, Save, Sparkles } from "lucide-react";
 
+import { z } from "zod";
+
+const searchSchema = z.object({
+  ai: z.any().optional(),
+});
+
 export const Route = createFileRoute("/mentor/challenges/new")({
+  validateSearch: (search) => searchSchema.parse(search),
   head: () => ({
     meta: [
       { title: "New Challenge — SkillSwap" },
@@ -24,6 +31,7 @@ export const Route = createFileRoute("/mentor/challenges/new")({
 function NewChallenge() {
   const navigate = useNavigate();
   const session = useSession();
+  const { ai } = Route.useSearch() as any;
 
   // Form states
   const [title, setTitle] = useState("");
@@ -110,7 +118,7 @@ function NewChallenge() {
   };
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.search.includes("ai=true")) {
+    if (ai === true || ai === "true") {
       setIsGenerating(true);
       const timer = setTimeout(() => {
         handleAiDraft(true);
@@ -119,7 +127,7 @@ function NewChallenge() {
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [ai]);
 
   const handlePublish = async (e: React.FormEvent) => {
     e.preventDefault();
