@@ -2,8 +2,6 @@
 
 **A platform for proving skills through real-world challenges.**
 
-🔗 Live demo: [skillswap.up.railway.app](https://skillswap.up.railway.app)
-
 ## Problem
 
 AI is disproportionately squeezing entry-level tech talent out of the job market:
