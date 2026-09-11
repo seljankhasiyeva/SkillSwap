@@ -26,9 +26,6 @@ SkillSwap replaces self-reported resumes with **verified skill profiles**, built
 | **Mentor** | Create and review challenges, evaluate candidate submissions, verify results or request revisions |
 | **Company** | Post internships and job openings, browse candidates by verified skill, hire faster with proof of real work |
 
-## My Role
-
-While this was a 2-person team project, I was the **sole developer on the technical build** — I built the entire platform end-to-end myself: the backend, the frontend, and all three dashboards (candidate, mentor, and company), plus the full challenge-submission flow. My teammate, Zarifa Musayeva, focused on the evaluation/scoring logic and business side (market research, pitch, business model).
 
 ## Architecture
 
